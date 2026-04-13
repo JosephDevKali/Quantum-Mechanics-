@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Nexus | Dive into the world of Quantum Mechanics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="min-h-screen">
+
+    <!-- Background Effects -->
+    <div class="quantum-bg"></div>
+    <div class="particles" id="particles"></div>
+    <div class="grid-pattern fixed inset-0 opacity-20 pointer-events-none"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 glass-strong border-b border-cyan-500/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="showSection('home')">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center animate-pulse">
+                        <span class="text-white font-orbitron font-bold text-xl">Q</span>
+                    </div>
+                    <span class="font-orbitron text-2xl font-bold wave-text">QUANTUM NEXUS</span>
+                </div>
+                
+                <div class="hidden md:flex space-x-8">
+                    <button onclick="showSection('topics')" class="nav-item text-cyan-300 hover:text-white px-3 py-2 text-sm font-medium tracking-wider uppercase">Topics</button>
+                    <button onclick="showSection('simulations')" class="nav-item text-cyan-300 hover:text-white px-3 py-2 text-sm font-medium tracking-wider uppercase">Simulations</button>
+                    <button onclick="showSection('notes')" class="nav-item text-cyan-300 hover:text-white px-3 py-2 text-sm font-medium tracking-wider uppercase">Notes</button>
+                    <button onclick="showSection('qa')" class="nav-item text-cyan-300 hover:text-white px-3 py-2 text-sm font-medium tracking-wider uppercase">Q&A</button>
+                    <button onclick="showSection('gallery')" class="nav-item text-cyan-300 hover:text-white px-3 py-2 text-sm font-medium tracking-wider uppercase">Gallery</button>
+                    <button onclick="showSection('resources')" class="nav-item text-cyan-300 hover:text-white px-3 py-2 text-sm font-medium tracking-wider uppercase">Resources</button>
+                    <button onclick="showSection('admin')" class="nav-item text-red-400 hover:text-red-300 px-3 py-2 text-sm font-medium tracking-wider uppercase border border-red-500/30 rounded">Admin</button>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button onclick="toggleMobileMenu()" class="text-cyan-300 hover:text-white">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden glass-strong border-t border-cyan-500/20">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <button onclick="showSection('topics')" class="block w-full text-left text-cyan-300 hover:text-white px-3 py-2 text-base font-medium">Topics</button>
+                <button onclick="showSection('simulations')" class="block w-full text-left text-cyan-300 hover:text-white px-3 py-2 text-base font-medium">Simulations</button>
+                <button onclick="showSection('notes')" class="block w-full text-left text-cyan-300 hover:text-white px-3 py-2 text-base font-medium">Notes</button>
+                <button onclick="showSection('qa')" class="block w-full text-left text-cyan-300 hover:text-white px-3 py-2 text-base font-medium">Q&A</button>
+                <button onclick="showSection('gallery')" class="block w-full text-left text-cyan-300 hover:text-white px-3 py-2 text-base font-medium">Gallery</button>
+                <button onclick="showSection('resources')" class="block w-full text-left text-cyan-300 hover:text-white px-3 py-2 text-base font-medium">Resources</button>
+                <button onclick="showSection('admin')" class="block w-full text-left text-red-400 hover:text-red-300 px-3 py-2 text-base font-medium">Admin</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+
+        <!-- HOME SECTION -->
+        <section id="home" class="section active">
+            <div class="text-center py-20 relative">
+                <div class="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none">
+                    <div class="w-96 h-96 rounded-full bg-cyan-500 blur-3xl animate-pulse"></div>
+                    <div class="w-96 h-96 rounded-full bg-purple-500 blur-3xl animate-pulse delay-1000 ml-20"></div>
+                </div>
+                
+                <h1 class="font-orbitron text-5xl md:text-7xl font-black mb-6 wave-text leading-tight">
+                    Explore the<br/>Quantum Realm
+                </h1>
+                <p class="text-xl md:text-2xl text-cyan-200/80 max-w-3xl mx-auto mb-12 font-light">
+                    Interactive simulations, comprehensive notes, and visualizations of the fundamental nature of reality
+                </p>
+                
+                <div class="flex flex-wrap justify-center gap-4 mb-16">
+                    <button onclick="showSection('simulations')" class="quantum-btn px-8 py-4 rounded-full text-white font-bold text-lg flex items-center gap-2">
+                        <span>Launch Simulation</span>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </button>
+                    <button onclick="showSection('topics')" class="glass px-8 py-4 rounded-full text-cyan-300 font-bold text-lg hover:bg-white/10 transition border border-cyan-500/30">
+                        Browse Topics
+                    </button>
+                </div>
+
+                <!-- Featured Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+                    <div class="glass rounded-2xl p-6 text-center">
+                        <div class="text-4xl font-orbitron font-bold text-cyan-400 mb-2">12+</div>
+                        <div class="text-sm text-gray-400 uppercase tracking-wider">Core Topics</div>
+                    </div>
+                    <div class="glass rounded-2xl p-6 text-center">
+                        <div class="text-4xl font-orbitron font-bold text-purple-400 mb-2">8</div>
+                        <div class="text-sm text-gray-400 uppercase tracking-wider">Live Simulations</div>
+                    </div>
+                    <div class="glass rounded-2xl p-6 text-center">
+                        <div class="text-4xl font-orbitron font-bold text-pink-400 mb-2">∞</div>
+                        <div class="text-sm text-gray-400 uppercase tracking-wider">Possibilities</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Topic Preview -->
+            <div class="mt-20">
+                <h2 class="font-orbitron text-3xl font-bold text-center mb-12 text-white">Featured Topics</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="topic-card glass rounded-xl p-6 cursor-pointer" onclick="showTopicDetail('wave-particle')">
+                        <div class="h-40 rounded-lg mb-4 overflow-hidden relative">
+                            <img src="https://kimi-web-img.moonshot.cn/img/thumbs.dreamstime.com/c16c9a3e7fa90031f911d23ad4feb2dd33e40191.jpg" alt="Wave-Particle Duality" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                        </div>
+                        <h3 class="font-orbitron text-xl font-bold text-cyan-300 mb-2">Wave-Particle Duality</h3>
+                        <p class="text-gray-400 text-sm">The foundation of quantum mechanics where matter exhibits both wave and particle properties.</p>
+                        <a href="https://en.wikipedia.org/wiki/Wave%E2%80%93particle_duality" class="inline-block mt-3 text-cyan-400 text-sm hover:underline">Read on Wikipedia →</a>
+                    </div>
+                    
+                    <div class="topic-card glass rounded-xl p-6 cursor-pointer" onclick="showTopicDetail('entanglement')">
+                        <div class="h-40 rounded-lg mb-4 overflow-hidden relative">
+                            <img src="https://kimi-web-img.moonshot.cn/img/thumbs.dreamstime.com/c1953cebe136d5c798729002685a062c8086fc4e.jpg" alt="Quantum Entanglement" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                        </div>
+                        <h3 class="font-orbitron text-xl font-bold text-purple-300 mb-2">Quantum Entanglement</h3>
+                        <p class="text-gray-400 text-sm">Spooky action at a distance where particles remain connected regardless of separation.</p>
+                        <a href="https://en.wikipedia.org/wiki/Quantum_entanglement" class="inline-block mt-3 text-purple-400 text-sm hover:underline">Read on Wikipedia →</a>
+                    </div>
+                    
+                    <div class="topic-card glass rounded-xl p-6 cursor-pointer" onclick="showTopicDetail('tunneling')">
+                        <div class="h-40 rounded-lg mb-4 overflow-hidden relative">
+                            <img src="https://kimi-web-img.moonshot.cn/img/analyticalscience.wiley.com/f3cf9e4f65b9a5d0390b1d9b2b952568d344b8df.jpeg" alt="Quantum Tunneling" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                        </div>
+                        <h3 class="font-orbitron text-xl font-bold text-pink-300 mb-2">Quantum Tunneling</h3>
+                        <p class="text-gray-400 text-sm">Particles passing through potential barriers they classically shouldn't overcome.</p>
+                        <a href="https://en.wikipedia.org/wiki/Quantum_tunnelling" class="inline-block mt-3 text-pink-400 text-sm hover:underline">Read on Wikipedia →</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TOPICS SECTION -->
+        <section id="topics" class="section">
+            <div class="mb-12">
+                <h1 class="font-orbitron text-4xl md:text-5xl font-bold mb-4 wave-text">Quantum Topics</h1>
+                <p class="text-gray-400 text-lg">Comprehensive coverage of quantum mechanics from fundamentals to advanced concepts</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="topics-grid">
+                <!-- Topics will be populated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- SIMULATIONS SECTION -->
+        <section id="simulations" class="section">
+            <div class="mb-8">
+                <h1 class="font-orbitron text-4xl md:text-5xl font-bold mb-4 wave-text">Interactive Simulations</h1>
+                <p class="text-gray-400 text-lg">Experiment with quantum phenomena in real-time</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                <button onclick="loadSimulation('double-slit')" class="sim-btn glass p-4 rounded-xl border-2 border-transparent hover:border-cyan-500 transition text-left">
+                    <h3 class="font-orbitron text-lg font-bold text-cyan-300">Double-Slit Experiment</h3>
+                    <p class="text-sm text-gray-400 mt-1">Wave-particle duality visualization</p>
+                </button>
+                <button onclick="loadSimulation('particle-box')" class="sim-btn glass p-4 rounded-xl border-2 border-transparent hover:border-purple-500 transition text-left">
+                    <h3 class="font-orbitron text-lg font-bold text-purple-300">Particle in a Box</h3>
+                    <p class="text-sm text-gray-400 mt-1">Quantum confinement and energy levels</p>
+                </button>
+                <button onclick="loadSimulation('tunneling')" class="sim-btn glass p-4 rounded-xl border-2 border-transparent hover:border-pink-500 transition text-left">
+                    <h3 class="font-orbitron text-lg font-bold text-pink-300">Quantum Tunneling</h3>
+                    <p class="text-sm text-gray-400 mt-1">Barrier penetration probability</p>
+                </button>
+                <button onclick="loadSimulation('harmonic')" class="sim-btn glass p-4 rounded-xl border-2 border-transparent hover:border-green-500 transition text-left">
+                    <h3 class="font-orbitron text-lg font-bold text-green-300">Quantum Harmonic Oscillator</h3>
+                    <p class="text-sm text-gray-400 mt-1">Wave functions and energy eigenstates</p>
+                </button>
+                <button onclick="loadSimulation('spin')" class="sim-btn glass p-4 rounded-xl border-2 border-transparent hover:border-yellow-500 transition text-left">
+                    <h3 class="font-orbitron text-lg font-bold text-yellow-300">Spin Measurement</h3>
+                    <p class="text-sm text-gray-400 mt-1">Stern-Gerlach experiment simulation</p>
+                </button>
+                <button onclick="loadSimulation('uncertainty')" class="sim-btn glass p-4 rounded-xl border-2 border-transparent hover:border-red-500 transition text-left">
+                    <h3 class="font-orbitron text-lg font-bold text-red-300">Uncertainty Principle</h3>
+                    <p class="text-sm text-gray-400 mt-1">Position-momentum trade-off</p>
+                </button>
+            </div>
+
+            <div class="glass rounded-2xl p-6 glow-border">
+                <div id="simulation-container" class="w-full">
+                    <canvas id="simCanvas" class="w-full bg-black/50 rounded-lg"></canvas>
+                    <div id="sim-controls" class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <!-- Dynamic controls inserted here -->
+                    </div>
+                    <div id="sim-info" class="mt-4 p-4 bg-black/30 rounded-lg font-mono text-sm text-cyan-300">
+                        Select a simulation to begin
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- NOTES SECTION -->
+        <section id="notes" class="section">
+            <div class="mb-8">
+                <h1 class="font-orbitron text-4xl md:text-5xl font-bold mb-4 wave-text">Detailed Notes</h1>
+                <p class="text-gray-400 text-lg">Comprehensive study materials with mathematical derivations</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                <!-- Sidebar -->
+                <div class="lg:col-span-1">
+                    <div class="glass rounded-xl p-4 sticky top-24">
+                        <h3 class="font-orbitron text-lg font-bold text-cyan-300 mb-4">Contents</h3>
+                        <ul class="space-y-2 text-sm">
+                            <li><button onclick="showNote('postulates')" class="text-left w-full text-gray-300 hover:text-cyan-400 py-1">1. Postulates of QM</button></li>
+                            <li><button onclick="showNote('schrodinger')" class="text-left w-full text-gray-300 hover:text-cyan-400 py-1">2. Schrödinger Equation</button></li>
+                            <li><button onclick="showNote('operators')" class="text-left w-full text-gray-300 hover:text-cyan-400 py-1">3. Operators & Observables</button></li>
+                            <li><button onclick="showNote('hydrogen')" class="text-left w-full text-gray-300 hover:text-cyan-400 py-1">4. Hydrogen Atom</button></li>
+                            <li><button onclick="showNote('perturbation')" class="text-left w-full text-gray-300 hover:text-cyan-400 py-1">5. Perturbation Theory</button></li>
+                            <li><button onclick="showNote('scattering')" class="text-left w-full text-gray-300 hover:text-cyan-400 py-1">6. Scattering Theory</button></li>
+                        </ul>
+                        
+                        <div class="mt-6 pt-6 border-t border-cyan-500/20">
+                            <h4 class="font-orbitron text-sm font-bold text-purple-300 mb-3">External Resources</h4>
+                            <ul class="space-y-2 text-xs">
+                                <li><a href="https://en.wikipedia.org/wiki/Quantum_mechanics" class="text-gray-400 hover:text-cyan-400 block">Quantum Mechanics Overview</a></li>
+                                <li><a href="https://en.wikipedia.org/wiki/Mathematical_formulation_of_quantum_mechanics" class="text-gray-400 hover:text-cyan-400 block">Mathematical Formulation</a></li>
+                                <li><a href="https://en.wikipedia.org/wiki/Introduction_to_quantum_mechanics" class="text-gray-400 hover:text-cyan-400 block">Introduction to QM</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content -->
+                <div class="lg:col-span-3">
+                    <div id="note-content" class="glass rounded-xl p-8 min-h-[600px]">
+                        <div class="terminal p-4 rounded-lg mb-6">
+                            <span class="text-cyan-400">root@quantum-nexus:~$</span> <span class="text-white">cat postulates.txt</span>
+                        </div>
+                        
+                        <h2 class="font-orbitron text-3xl font-bold text-white mb-6">The Postulates of Quantum Mechanics</h2>
+                        
+                        <div class="space-y-6 text-gray-300 leading-relaxed">
+                            <div class="formula">
+                                <strong class="text-cyan-400">Postulate I:</strong> The state of a quantum system is completely specified by a wave function Ψ(r,t), which contains all accessible physical information.
+                            </div>
+                            
+                            <p>The wave function must be single-valued, continuous, and square-integrable. The probability density is given by |Ψ|² = Ψ*Ψ.</p>
+                            
+                            <div class="formula">
+                                <strong class="text-purple-400">Postulate II:</strong> Every observable corresponds to a Hermitian operator Â. The eigenvalues are real and represent possible measurement outcomes.
+                                <br/><br/>
+                                Âψₙ = aₙψₙ
+                            </div>
+                            
+                            <div class="formula">
+                                <strong class="text-pink-400">Postulate III:</strong> The expectation value of an observable is:
+                                <br/><br/>
+                                ⟨A⟩ = ∫ Ψ* Â Ψ d³r / ∫ Ψ*Ψ d³r
+                            </div>
+                            
+                            <div class="formula">
+                                <strong class="text-green-400">Postulate IV:</strong> Time evolution is governed by the Schrödinger equation:
+                                <br/><br/>
+                                iℏ ∂Ψ/∂t = ĤΨ
+                            </div>
+                            
+                            <div class="mt-6 p-4 bg-cyan-900/20 border border-cyan-500/30 rounded-lg">
+                                <h4 class="font-orbitron text-cyan-300 mb-2">Learn More</h4>
+                                <a href="https://en.wikipedia.org/wiki/Postulates_of_quantum_mechanics" class="text-cyan-400 hover:underline text-sm">Postulates of Quantum Mechanics - Wikipedia</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Q&A SECTION -->
+        <section id="qa" class="section">
+            <div class="mb-8">
+                <h1 class="font-orbitron text-4xl md:text-5xl font-bold mb-4 wave-text">Quantum Q&A</h1>
+                <p class="text-gray-400 text-lg">Frequently asked questions about quantum mechanics</p>
+            </div>
+
+            <div class="max-w-4xl mx-auto space-y-4" id="qa-container">
+                <!-- Q&A items populated by JS -->
+            </div>
+
+            <div class="mt-12 glass rounded-xl p-8 max-w-4xl mx-auto">
+                <h3 class="font-orbitron text-2xl font-bold text-cyan-300 mb-4">Ask a Question</h3>
+                <form onsubmit="submitQuestion(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-2">Your Question</label>
+                        <textarea class="w-full bg-black/30 border border-cyan-500/30 rounded-lg p-4 text-white focus:border-cyan-500 focus:outline-none" rows="3" placeholder="What would you like to know about quantum physics?"></textarea>
+                    </div>
+                    <button type="submit" class="quantum-btn px-6 py-3 rounded-lg text-white font-bold">Submit Question</button>
+                </form>
+                
+                <div class="mt-6 pt-6 border-t border-cyan-500/20">
+                    <h4 class="font-orbitron text-lg font-bold text-purple-300 mb-3">Related Wikipedia Articles</h4>
+                    <div class="flex flex-wrap gap-3">
+                        <a href="https://en.wikipedia.org/wiki/Wave_function_collapse" class="px-3 py-1 bg-purple-500/20 border border-purple-500/30 rounded-full text-purple-300 text-sm hover:bg-purple-500/30 transition">Wave Function Collapse</a>
+                        <a href="https://en.wikipedia.org/wiki/Heisenberg_uncertainty_principle" class="px-3 py-1 bg-cyan-500/20 border border-cyan-500/30 rounded-full text-cyan-300 text-sm hover:bg-cyan-500/30 transition">Uncertainty Principle</a>
+                        <a href="https://en.wikipedia.org/wiki/Quantum_decoherence" class="px-3 py-1 bg-pink-500/20 border border-pink-500/30 rounded-full text-pink-300 text-sm hover:bg-pink-500/30 transition">Decoherence</a>
+                        <a href="https://en.wikipedia.org/wiki/Born_rule" class="px-3 py-1 bg-green-500/20 border border-green-500/30 rounded-full text-green-300 text-sm hover:bg-green-500/30 transition">Born Rule</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- GALLERY SECTION -->
+        <section id="gallery" class="section">
+            <div class="mb-8">
+                <h1 class="font-orbitron text-4xl md:text-5xl font-bold mb-4 wave-text">Visual Gallery</h1>
+                <p class="text-gray-400 text-lg">Artistic representations of quantum phenomena</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="gallery-item glass rounded-xl overflow-hidden">
+                    <img src="https://kimi-web-img.moonshot.cn/img/thumbs.dreamstime.com/c16c9a3e7fa90031f911d23ad4feb2dd33e40191.jpg" alt="Double Slit" class="gallery-img w-full h-64 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-orbitron text-lg font-bold text-cyan-300">Double Slit Interference</h3>
+                        <p class="text-sm text-gray-400">Wave-particle duality visualization</p>
+                        <a href="https://en.wikipedia.org/wiki/Double-slit_experiment" class="text-xs text-cyan-400 hover:underline mt-2 inline-block">Learn more →</a>
+                    </div>
+                </div>
+                
+                <div class="gallery-item glass rounded-xl overflow-hidden">
+                    <img src="https://kimi-web-img.moonshot.cn/img/thumbs.dreamstime.com/2f0dc90d8f9d0d2973a8198dd0fd62547380528e.jpg" alt="Entanglement" class="gallery-img w-full h-64 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-orbitron text-lg font-bold text-purple-300">Quantum Entanglement</h3>
+                        <p class="text-sm text-gray-400">Connected quantum states</p>
+                        <a href="https://en.wikipedia.org/wiki/Quantum_entanglement" class="text-xs text-purple-400 hover:underline mt-2 inline-block">Learn more →</a>
+                    </div>
+                </div>
+                
+                <div class="gallery-item glass rounded-xl overflow-hidden">
+                    <img src="https://kimi-web-img.moonshot.cn/img/thumbs.dreamstime.com/1cf2e3de346e750fdb941786c40bc6182f31d9d8.jpg" alt="Atomic Orbitals" class="gallery-img w-full h-64 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-orbitron text-lg font-bold text-green-300">Electron Cloud</h3>
+                        <p class="text-sm text-gray-400">Probability distribution</p>
+                        <a href="https://en.wikipedia.org/wiki/Atomic_orbital" class="text-xs text-green-400 hover:underline mt-2 inline-block">Learn more →</a>
+                    </div>
+                </div>
+                
+                <div class="gallery-item glass rounded-xl overflow-hidden">
+                    <img src="https://kimi-web-img.moonshot.cn/img/static.scientificamerican.com/fa4f3c04a18c69598a5ef03f6f7eed2cd0ba2324.jpg" alt="Tunneling" class="gallery-img w-full h-64 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-orbitron text-lg font-bold text-pink-300">Quantum Tunneling</h3>
+                        <p class="text-sm text-gray-400">Barrier penetration</p>
+                        <a href="https://en.wikipedia.org/wiki/Quantum_tunnelling" class="text-xs text-pink-400 hover:underline mt-2 inline-block">Learn more →</a>
+                    </div>
+                </div>
+                
+                <div class="gallery-item glass rounded-xl overflow-hidden">
+                    <img src="https://kimi-web-img.moonshot.cn/img/images.fineartamerica.com/82a7b096a7919c11fa240dc0701a3ad551780ff3.jpg" alt="Entanglement Art" class="gallery-img w-full h-64 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-orbitron text-lg font-bold text-yellow-300">Entanglement Network</h3>
+                        <p class="text-sm text-gray-400">Complex quantum correlations</p>
+                        <a href="https://en.wikipedia.org/wiki/Quantum_network" class="text-xs text-yellow-400 hover:underline mt-2 inline-block">Learn more →</a>
+                    </div>
+                </div>
+                
+                <div class="gallery-item glass rounded-xl overflow-hidden">
+                    <img src="https://kimi-web-img.moonshot.cn/img/scitechdaily.com/bb9b6eab6634d2495c009112a53ae4629dc00516.jpg" alt="Wave Function" class="gallery-img w-full h-64 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-orbitron text-lg font-bold text-cyan-300">Wave Function</h3>
+                        <p class="text-sm text-gray-400">Quantum state visualization</p>
+                        <a href="https://en.wikipedia.org/wiki/Wave_function" class="text-xs text-cyan-400 hover:underline mt-2 inline-block">Learn more →</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- RESOURCES SECTION -->
+        <section id="resources" class="section">
+            <div class="mb-8">
+                <h1 class="font-orbitron text-4xl md:text-5xl font-bold mb-4 wave-text">Quantum Resources</h1>
+                <p class="text-gray-400 text-lg">Curated Wikipedia articles and external references</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Fundamental Concepts -->
+                <div class="glass rounded-xl p-6 border-t-4 border-cyan-500">
+                    <h3 class="font-orbitron text-xl font-bold text-cyan-300 mb-4">Fundamental Concepts</h3>
+                    <ul class="space-y-3">
+                        <li><a href="https://en.wikipedia.org/wiki/Quantum_mechanics" class="block text-gray-300 hover:text-cyan-400 transition">Quantum Mechanics</a></li>
+                        <li><a href="https://en.wikipedia.org/wiki/Wave%E2%80%93particle_duality" class="block text-gray-300 hover:text-cyan-400 transition">Wave-Particle Duality</a></li>
+                        <li><a href="https://en.wikipedia.org/wiki/Uncertainty_principle" class="block text-gray-300 hover:text-cyan-400 transition">Uncertainty Principle</a></li>
+                        <li><a href="https://en.wikipedia.org/wiki/Quantum_superposition" class="block text-gray-300 hover:text-cyan-400 transition">Quantum Superposition</a></li>
+                        <li><a href="https://en.wikipedia.org/wiki/Quantum_entanglement" class="block text-gray-300 hover:text-cyan-400 transition">Quantum Entanglement</a></li>
+                        <li><a href="https://en.wikipedia.org/wiki/Quantum_decoherence" class="block text-gray-300 hover:text-cyan-400 transition">Decoherence</a></li>
+                    </ul>
+                </div>
+
+                <!-- Key Experiments -->
+                <div class="glass rounded-xl p-6 border-t-4 border-purple-500">
+                    <h3 class="font-orbitron text-xl font-bold text-purple-300 mb-4">Key Experiments</h3>
+                    <ul class="space-y-3">
+                        <li><a href="https://en.wikipedia.org/wiki/Double-slit_experiment" class="block text-gray-300 hover:text-purple-400 transition">Double-Slit Experiment</a></li>
+                        <li><a href="https://en.wikipedia.org/wiki/Stern%E2%80%93Gerlach_experiment" class="block text-gray-300 hover:text-purple-400 transition">Stern-Gerlach Experiment</a></li>
+                        <li><a href="https://en.wikipedia.org/wiki/Photoelectric_effect" class="block text-gray-300 hover:text-purple-400 transition">Photoelectric Effect</a></li>
+                        <li><a href="https://en.wikipedia.org/wiki/Compton_scattering" class="block text-gray-300 hover:text-purple-400 transition">Compton Scattering</a></li>
+                        <li><a href="https://en.wikipedia.org/wiki/Franck%E2%80%93Hertz_experiment" class="block text-gray-300 hover:text-purple-400 transition">Franck-Hertz Experiment</a></li>
+                        <li><a href="https://en.wikipedia.org/wiki/Davisson%E2%80%93Germer_experiment" class="block text-gray-300 hover:text-purple-400 transition">Davisson-Germer Experiment</a></li>
+                    </ul>
+                </div>
+
+                <!-- Mathematical Framework -->
+                <div class="glass rounded-xl p-6 border-t-4 border-pink-500">
+                    <h3 class="font-orbitron text-xl font-bold text-pink-300 mb-4">Mathematical Framework</h3>
+                    <ul class="space-y-3">
+                        <li><a href="https://en.wikipedia.org/wiki/Schr%C3%B6dinger_equation" class="block text-gray-300 hover:text-pink-400 transition">Schrödinger Equation</a></li>
+                        <li><a href="https://en.wikipedia.org/wiki/Hilbert_space" class="block text-gray-300 hover:text-pink-400 transition">Hilbert Space</a></li>
+                        <li><a href="https://en.wikipedia.org/wiki/Hermitian_operator" class="block text-gray-300 hover:text-pink-400 transition">Hermitian Operators</a></li>
+                        <li><a href="https://en.wikipedia.org/wiki/Commutator" class="block text-gray-300 hover:text-pink-400 transition">Commutation Relations</a></li>
+                        <li><a href="https://en.wikipedia.org/wiki/Eigenvalues_and_eigenvectors" class="block text-gray-300 hover:text-pink-400 transition">Eigenvalues & Eigenvectors</a></li>
+                        <li><a href="https://en.wikipedia.org/wiki/Probability_amplitude" class="block text-gray-300 hover:text-pink-400 transition">Probability Amplitude</a></li>
+                    </ul>
+                </div>
+
+                <!-- Quantum Systems -->
+                <div class="glass rounded-xl p-6 border-t-4 border-green-500">
+                    <h3 class="font-orbitron text-xl font-bold text-green-300 mb-4">Quantum Systems</h3>
+                    <ul class="space-y-3">
+                        <li><a href="https://en.wikipedia.org/wiki/Particle_in_a_box" class="block text-gray-300 hover:text-green-400 transition">Particle in a Box</a></li>
+                        <li><a href="https://en.wikipedia.org/wiki/Quantum_harmonic_oscillator" class="block text-gray-300 hover:text-green-400 transition">Quantum Harmonic Oscillator</a></li>
+                        <li><a href="https://en.wikipedia.org/wiki/Hydrogen_atom" class="block text-gray-300 hover:text-green-400 transition">Hydrogen Atom</a></li>
+                        <li><a href="https://en.wikipedia.org/wiki/Quantum_tunnelling" class="block text-gray-300 hover:text-green-400 transition">Quantum Tunneling</a></li>
+                        <li><a href="https://en.wikipedia.org/wiki/Spin_(physics)" class="block text-gray-300 hover:text-green-400 transition">Quantum Spin</a></li>
+                        <li><a href="https://en.wikipedia.org/wiki/Potential_well" class="block text-gray-300 hover:text-green-400 transition">Potential Wells</a></li>
+                    </ul>
+                </div>
+
+                <!-- Advanced Topics -->
+                <div class="glass rounded-xl p-6 border-t-4 border-yellow-500">
+                    <h3 class="font-orbitron text-xl font-bold text-yellow-300 mb-4">Advanced Topics</h3>
+                    <ul class="space-y-3">
+                        <li><a href="https://en.wikipedia.org/wiki/Perturbation_theory_(quantum_mechanics)" class="block text-gray-300 hover:text-yellow-400 transition">Perturbation Theory</a></li>
+                        <li><a href="https://en.wikipedia.org/wiki/Scattering_theory" class="block text-gray-300 hover:text-yellow-400 transition">Scattering Theory</a></li>
+                        <li><a href="https://en.wikipedia.org/wiki/Quantum_field_theory" class="block text-gray-300 hover:text-yellow-400 transition">Quantum Field Theory</a></li>
+                        <li><a href="https://en.wikipedia.org/wiki/Many-worlds_interpretation" class="block text-gray-300 hover:text-yellow-400 transition">Many-Worlds Interpretation</a></li>
+                        <li><a href="https://en.wikipedia.org/wiki/Copenhagen_interpretation" class="block text-gray-300 hover:text-yellow-400 transition">Copenhagen Interpretation</a></li>
+                        <li><a href="https://en.wikipedia.org/wiki/Bell%27s_theorem" class="block text-gray-300 hover:text-yellow-400 transition">Bell's Theorem</a></li>
+                    </ul>
+                </div>
+
+                <!-- Applications -->
+                <div class="glass rounded-xl p-6 border-t-4 border-red-500">
+                    <h3 class="font-orbitron text-xl font-bold text-red-300 mb-4">Applications</h3>
+                    <ul class="space-y-3">
+                        <li><a href="https://en.wikipedia.org/wiki/Quantum_computing" class="block text-gray-300 hover:text-red-400 transition">Quantum Computing</a></li>
+                        <li><a href="https://en.wikipedia.org/wiki/Quantum_cryptography" class="block text-gray-300 hover:text-red-400 transition">Quantum Cryptography</a></li>
+                        <li><a href="https://en.wikipedia.org/wiki/Quantum_teleportation" class="block text-gray-300 hover:text-red-400 transition">Quantum Teleportation</a></li>
+                        <li><a href="https://en.wikipedia.org/wiki/Scanning_tunneling_microscope" class="block text-gray-300 hover:text-red-400 transition">Scanning Tunneling Microscope</a></li>
+                        <li><a href="https://en.wikipedia.org/wiki/Laser" class="block text-gray-300 hover:text-red-400 transition">Lasers</a></li>
+                        <li><a href="https://en.wikipedia.org/wiki/MRI_scanner" class="block text-gray-300 hover:text-red-400 transition">MRI Technology</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mt-12 glass rounded-xl p-8">
+                <h3 class="font-orbitron text-2xl font-bold text-white mb-4">Recommended Reading Order</h3>
+                <div class="flex flex-wrap items-center gap-4 text-sm">
+                    <a href="https://en.wikipedia.org/wiki/Introduction_to_quantum_mechanics" class="px-4 py-2 bg-cyan-500/20 border border-cyan-500/40 rounded-lg text-cyan-300 hover:bg-cyan-500/30 transition">1. Introduction</a>
+                    <span class="text-gray-500">→</span>
+                    <a href="https://en.wikipedia.org/wiki/Wave%E2%80%93particle_duality" class="px-4 py-2 bg-purple-500/20 border border-purple-500/40 rounded-lg text-purple-300 hover:bg-purple-500/30 transition">2. Wave-Particle Duality</a>
+                    <span class="text-gray-500">→</span>
+                    <a href="https://en.wikipedia.org/wiki/Schr%C3%B6dinger_equation" class="px-4 py-2 bg-pink-500/20 border border-pink-500/40 rounded-lg text-pink-300 hover:bg-pink-500/30 transition">3. Schrödinger Equation</a>
+                    <span class="text-gray-500">→</span>
+                    <a href="https://en.wikipedia.org/wiki/Quantum_entanglement" class="px-4 py-2 bg-green-500/20 border border-green-500/40 rounded-lg text-green-300 hover:bg-green-500/30 transition">4. Entanglement</a>
+                    <span class="text-gray-500">→</span>
+                    <a href="https://en.wikipedia.org/wiki/Quantum_computing" class="px-4 py-2 bg-yellow-500/20 border border-yellow-500/40 rounded-lg text-yellow-300 hover:bg-yellow-500/30 transition">5. Applications</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ADMIN SECTION -->
+        <section id="admin" class="section">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-12">
+                    <h1 class="font-orbitron text-4xl font-bold text-red-500 mb-2">🔒 SECURE ADMIN PORTAL</h1>
+                    <p class="text-red-400/60 font-mono">RESTRICTED ACCESS - AUTHORIZED PERSONNEL ONLY</p>
+                </div>
+
+                <!-- Login Form -->
+                <div id="admin-login" class="glass-strong rounded-2xl p-8 max-w-md mx-auto border-2 border-red-500/30 security-overlay">
+                    <div class="flex items-center justify-center mb-6">
+                        <div class="w-16 h-16 rounded-full bg-red-500/20 flex items-center justify-center border-2 border-red-500">
+                            <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                        </div>
+                    </div>
+                    
+                    <form onsubmit="authenticateAdmin(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-red-400 text-sm font-bold mb-2 font-mono">USERNAME</label>
+                            <input type="text" id="admin-user" class="w-full bg-black/50 border border-red-500/30 rounded p-3 text-white font-mono focus:border-red-500 focus:outline-none" placeholder="Enter username">
+                        </div>
+                        <div>
+                            <label class="block text-red-400 text-sm font-bold mb-2 font-mono">PASSWORD</label>
+                            <input type="password" id="admin-pass" class="w-full bg-black/50 border border-red-500/30 rounded p-3 text-white font-mono focus:border-red-500 focus:outline-none" placeholder="••••••••">
+                        </div>
+                        <div>
+                            <label class="block text-red-400 text-sm font-bold mb-2 font-mono">2FA CODE</label>
+                            <input type="text" id="admin-2fa" class="w-full bg-black/50 border border-red-500/30 rounded p-3 text-white font-mono focus:border-red-500 focus:outline-none" placeholder="000000" maxlength="6">
+                        </div>
+                        <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded transition border border-red-400">
+                            AUTHENTICATE
+                        </button>
+                    </form>
+                    
+                    <div class="mt-4 text-center">
+                        <p class="text-xs text-red-400/50 font-mono">Failed attempts: <span id="attempts">0</span>/3</p>
+                    </div>
+                </div>
+
+                <!-- Admin Dashboard (Hidden by default) -->
+                <div id="admin-dashboard" class="hidden space-y-6">
+                    <div class="glass-strong rounded-xl p-6 border border-green-500/30">
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="font-orbitron text-2xl text-green-400">System Status: ONLINE</h2>
+                            <button onclick="logoutAdmin()" class="text-red-400 hover:text-red-300 text-sm font-bold">LOGOUT</button>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                            <div class="bg-black/30 rounded p-4 border border-cyan-500/30">
+                                <div class="text-2xl font-bold text-cyan-400" id="visitor-count">1,247</div>
+                                <div class="text-xs text-gray-400">Active Sessions</div>
+                            </div>
+                            <div class="bg-black/30 rounded p-4 border border-purple-500/30">
+                                <div class="text-2xl font-bold text-purple-400">98.2%</div>
+                                <div class="text-xs text-gray-400">Server Uptime</div>
+                            </div>
+                            <div class="bg-black/30 rounded p-4 border border-green-500/30">
+                                <div class="text-2xl font-bold text-green-400">SECURE</div>
+                                <div class="text-xs text-gray-400">Firewall Status</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="glass rounded-xl p-6">
+                            <h3 class="font-orbitron text-xl text-cyan-300 mb-4">Content Management</h3>
+                            <div class="space-y-2">
+                                <button class="w-full text-left p-3 bg-black/30 rounded hover:bg-cyan-500/20 transition text-sm">Edit Topic: Wave-Particle Duality</button>
+                                <button class="w-full text-left p-3 bg-black/30 rounded hover:bg-cyan-500/20 transition text-sm">Update Simulation Parameters</button>
+                                <button class="w-full text-left p-3 bg-black/30 rounded hover:bg-cyan-500/20 transition text-sm">Manage Q&A Database</button>
+                                <button class="w-full text-left p-3 bg-black/30 rounded hover:bg-cyan-500/20 transition text-sm">Upload Gallery Images</button>
+                            </div>
+                        </div>
+                        
+                        <div class="glass rounded-xl p-6">
+                            <h3 class="font-orbitron text-xl text-purple-300 mb-4">Security Logs</h3>
+                            <div class="font-mono text-xs space-y-2 text-gray-400 h-48 overflow-y-auto" id="security-logs">
+                                <div class="text-green-400">[2026-03-31 21:45:23] Admin login successful</div>
+                                <div class="text-yellow-400">[2026-03-31 21:30:15] Failed login attempt from IP 192.168.1.45</div>
+                                <div class="text-cyan-400">[2026-03-31 21:15:00] Database backup completed</div>
+                                <div class="text-gray-500">[2026-03-31 20:45:12] System maintenance scheduled</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-cyan-500/20 bg-black/50 mt-20">
+        <div class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center space-x-2 mb-4 md:mb-0">
+                    <span class="font-orbitron text-xl font-bold text-cyan-400">QN</span>
+                    <span class="text-gray-400">© 2026 Quantum Nexus. All realities reserved.</span>
+                </div>
+                <div class="flex space-x-6 text-sm text-gray-400">
+                    <a href="https://en.wikipedia.org/wiki/Quantum_mechanics" class="hover:text-cyan-400 transition">Wikipedia</a>
+                    <a href="#" class="hover:text-cyan-400 transition">Privacy</a>
+                    <a href="#" class="hover:text-cyan-400 transition">Terms</a>
+                    <a href="#" class="hover:text-cyan-400 transition">Contact</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
