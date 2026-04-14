@@ -1,0 +1,1442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Nexus | Dive into the world of Quantum Mechanics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        :root {
+            --quantum-blue: #00d4ff;
+            --quantum-purple: #9d4edd;
+            --quantum-pink: #ff006e;
+            --quantum-cyan: #00f5ff;
+            --deep-space: #050508;
+            --nebula-1: #1a0b2e;
+            --nebula-2: #16213e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--deep-space);
+            color: #e0e0e0;
+            overflow-x: hidden;
+        }
+
+        .font-orbitron { font-family: 'Orbitron', sans-serif; }
+        .font-mono { font-family: 'Space Mono', monospace; }
+
+        /* Animated Background */
+        .quantum-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(135deg, var(--deep-space) 0%, var(--nebula-1) 50%, var(--nebula-2) 100%);
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--quantum-cyan);
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+            box-shadow: 0 0 10px var(--quantum-cyan), 0 0 20px var(--quantum-cyan);
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
+        }
+
+        /* Glassmorphism */
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .glass-strong {
+            background: rgba(20, 20, 35, 0.7);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+        }
+
+        /* Glowing Effects */
+        .glow-text {
+            text-shadow: 0 0 10px var(--quantum-cyan), 0 0 20px var(--quantum-cyan), 0 0 40px var(--quantum-purple);
+        }
+
+        .glow-border {
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.5), inset 0 0 20px rgba(0, 212, 255, 0.1);
+        }
+
+        /* Navigation */
+        .nav-item {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--quantum-cyan), var(--quantum-purple));
+            transition: width 0.3s ease;
+        }
+
+        .nav-item:hover::after {
+            width: 100%;
+        }
+
+        /* Topic Cards */
+        .topic-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.05) 0%, rgba(157, 78, 221, 0.05) 100%);
+        }
+
+        .topic-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(0, 212, 255, 0.3);
+            border-color: var(--quantum-cyan);
+        }
+
+        /* Simulation Canvas */
+        canvas {
+            border-radius: 12px;
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.2);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--deep-space);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(var(--quantum-cyan), var(--quantum-purple));
+            border-radius: 4px;
+        }
+
+        /* Quantum Button */
+        .quantum-btn {
+            background: linear-gradient(45deg, var(--quantum-cyan), var(--quantum-purple));
+            border: none;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .quantum-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.5s;
+        }
+
+        .quantum-btn:hover::before {
+            left: 100%;
+        }
+
+        .quantum-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.5);
+        }
+
+        /* Admin Panel Security Overlay */
+        .security-overlay {
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(0, 0, 0, 0.9),
+                rgba(0, 0, 0, 0.9) 10px,
+                rgba(255, 0, 0, 0.1) 10px,
+                rgba(255, 0, 0, 0.1) 20px
+            );
+        }
+
+        /* Wave Animation for Headers */
+        .wave-text {
+            background: linear-gradient(90deg, var(--quantum-cyan), var(--quantum-purple), var(--quantum-pink), var(--quantum-cyan));
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: wave 3s ease infinite;
+        }
+
+        @keyframes wave {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* Terminal Effect for Notes */
+        .terminal {
+            background: rgba(0, 20, 40, 0.9);
+            border: 1px solid var(--quantum-cyan);
+            font-family: 'Space Mono', monospace;
+            position: relative;
+        }
+
+        .terminal::before {
+            content: '>';
+            position: absolute;
+            left: 10px;
+            color: var(--quantum-cyan);
+        }
+
+        /* Q&A Accordion */
+        .qa-item {
+            border-left: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .qa-item:hover {
+            border-left-color: var(--quantum-cyan);
+            background: rgba(0, 212, 255, 0.05);
+        }
+
+        .qa-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+
+        .qa-item.active .qa-answer {
+            max-height: 500px;
+        }
+
+        /* Loading Animation */
+        .quantum-loader {
+            width: 50px;
+            height: 50px;
+            border: 3px solid transparent;
+            border-top-color: var(--quantum-cyan);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Grid Pattern */
+        .grid-pattern {
+            background-image: 
+                linear-gradient(rgba(0, 212, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 212, 255, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        /* Hidden by default */
+        .section { display: none; }
+        .section.active { display: block; animation: fadeIn 0.5s ease; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Math Formula Styling */
+        .formula {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--quantum-purple);
+            font-family: 'Space Mono', monospace;
+            margin: 1rem 0;
+        }
+
+        /* Image Gallery */
+        .gallery-img {
+            transition: all 0.4s;
+            filter: grayscale(20%);
+        }
+
+        .gallery-img:hover {
+            transform: scale(1.05);
+            filter: grayscale(0%);
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.5);
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <!-- Background Effects -->
+    <div class="quantum-bg"></div>
+    <div class="particles" id="particles"></div>
+    <div class="grid-pattern fixed inset-0 opacity-20 pointer-events-none"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 glass-strong border-b border-cyan-500/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="showSection('home')">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center animate-pulse">
+                        <span class="text-white font-orbitron font-bold text-xl">Q</span>
+                    </div>
+                    <span class="font-orbitron text-2xl font-bold wave-text">QUANTUM NEXUS</span>
+                </div>
+                
+                <div class="hidden md:flex space-x-8">
+                    <button onclick="showSection('topics')" class="nav-item text-cyan-300 hover:text-white px-3 py-2 text-sm font-medium tracking-wider uppercase">Topics</button>
+                    <button onclick="showSection('simulations')" class="nav-item text-cyan-300 hover:text-white px-3 py-2 text-sm font-medium tracking-wider uppercase">Simulations</button>
+                    <button onclick="showSection('notes')" class="nav-item text-cyan-300 hover:text-white px-3 py-2 text-sm font-medium tracking-wider uppercase">Notes</button>
+                    <button onclick="showSection('qa')" class="nav-item text-cyan-300 hover:text-white px-3 py-2 text-sm font-medium tracking-wider uppercase">Q&A</button>
+                    <button onclick="showSection('gallery')" class="nav-item text-cyan-300 hover:text-white px-3 py-2 text-sm font-medium tracking-wider uppercase">Gallery</button>
+                    <button onclick="showSection('admin')" class="nav-item text-red-400 hover:text-red-300 px-3 py-2 text-sm font-medium tracking-wider uppercase border border-red-500/30 rounded">Admin</button>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button onclick="toggleMobileMenu()" class="text-cyan-300 hover:text-white">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden glass-strong border-t border-cyan-500/20">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <button onclick="showSection('topics')" class="block w-full text-left text-cyan-300 hover:text-white px-3 py-2 text-base font-medium">Topics</button>
+                <button onclick="showSection('simulations')" class="block w-full text-left text-cyan-300 hover:text-white px-3 py-2 text-base font-medium">Simulations</button>
+                <button onclick="showSection('notes')" class="block w-full text-left text-cyan-300 hover:text-white px-3 py-2 text-base font-medium">Notes</button>
+                <button onclick="showSection('qa')" class="block w-full text-left text-cyan-300 hover:text-white px-3 py-2 text-base font-medium">Q&A</button>
+                <button onclick="showSection('gallery')" class="block w-full text-left text-cyan-300 hover:text-white px-3 py-2 text-base font-medium">Gallery</button>
+                <button onclick="showSection('admin')" class="block w-full text-left text-red-400 hover:text-red-300 px-3 py-2 text-base font-medium">Admin</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+
+        <!-- HOME SECTION -->
+        <section id="home" class="section active">
+            <div class="text-center py-20 relative">
+                <div class="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none">
+                    <div class="w-96 h-96 rounded-full bg-cyan-500 blur-3xl animate-pulse"></div>
+                    <div class="w-96 h-96 rounded-full bg-purple-500 blur-3xl animate-pulse delay-1000 ml-20"></div>
+                </div>
+                
+                <h1 class="font-orbitron text-5xl md:text-7xl font-black mb-6 wave-text leading-tight">
+                    Explore the<br/>Quantum Realm
+                </h1>
+                <p class="text-xl md:text-2xl text-cyan-200/80 max-w-3xl mx-auto mb-12 font-light">
+                    Interactive simulations, comprehensive notes, and visualizations of the fundamental nature of reality
+                </p>
+                
+                <div class="flex flex-wrap justify-center gap-4 mb-16">
+                    <button onclick="showSection('simulations')" class="quantum-btn px-8 py-4 rounded-full text-white font-bold text-lg flex items-center gap-2">
+                        <span>Launch Simulation</span>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </button>
+                    <button onclick="showSection('topics')" class="glass px-8 py-4 rounded-full text-cyan-300 font-bold text-lg hover:bg-white/10 transition border border-cyan-500/30">
+                        Browse Topics
+                    </button>
+                </div>
+
+                <!-- Featured Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+                    <div class="glass rounded-2xl p-6 text-center">
+                        <div class="text-4xl font-orbitron font-bold text-cyan-400 mb-2">12+</div>
+                        <div class="text-sm text-gray-400 uppercase tracking-wider">Core Topics</div>
+                    </div>
+                    <div class="glass rounded-2xl p-6 text-center">
+                        <div class="text-4xl font-orbitron font-bold text-purple-400 mb-2">8</div>
+                        <div class="text-sm text-gray-400 uppercase tracking-wider">Live Simulations</div>
+                    </div>
+                    <div class="glass rounded-2xl p-6 text-center">
+                        <div class="text-4xl font-orbitron font-bold text-pink-400 mb-2">∞</div>
+                        <div class="text-sm text-gray-400 uppercase tracking-wider">Possibilities</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Topic Preview -->
+            <div class="mt-20">
+                <h2 class="font-orbitron text-3xl font-bold text-center mb-12 text-white">Featured Topics</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="topic-card glass rounded-xl p-6 cursor-pointer" onclick="showTopicDetail('wave-particle')">
+                        <div class="h-40 rounded-lg mb-4 overflow-hidden relative">
+                            <img src="https://kimi-web-img.moonshot.cn/img/thumbs.dreamstime.com/c16c9a3e7fa90031f911d23ad4feb2dd33e40191.jpg" alt="Wave-Particle Duality" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                        </div>
+                        <h3 class="font-orbitron text-xl font-bold text-cyan-300 mb-2">Wave-Parti
+                        
+                        
+                        cle Duality</h3>
+                        <p class="text-gray-400 text-sm">The foundation of quantum mechanics where matter exhibits both wave and particle properties.</p>
+                    </div>
+                    
+                    <div class="topic-card glass rounded-xl p-6 cursor-pointer" onclick="showTopicDetail('entanglement')">
+                        <div class="h-40 rounded-lg mb-4 overflow-hidden relative">
+                            <img src="https://kimi-web-img.moonshot.cn/img/thumbs.dreamstime.com/c1953cebe136d5c798729002685a062c8086fc4e.jpg" alt="Quantum Entanglement" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                        </div>
+                        <h3 class="font-orbitron text-xl font-bold text-purple-300 mb-2">Quantum Entanglement</h3>
+                        <p class="text-gray-400 text-sm">Spooky action at a distance where particles remain connected regardless of separation.</p>
+                    </div>
+                    
+                    <div class="topic-card glass rounded-xl p-6 cursor-pointer" onclick="showTopicDetail('tunneling')">
+                        <div class="h-40 rounded-lg mb-4 overflow-hidden relative">
+                            <img src="https://kimi-web-img.moonshot.cn/img/analyticalscience.wiley.com/f3cf9e4f65b9a5d0390b1d9b2b952568d344b8df.jpeg" alt="Quantum Tunneling" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                        </div>
+                        <h3 class="font-orbitron text-xl font-bold text-pink-300 mb-2">Quantum Tunneling</h3>
+                        <p class="text-gray-400 text-sm">Particles passing through potential barriers they classically shouldn't overcome.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TOPICS SECTION -->
+        <section id="topics" class="section">
+            <div class="mb-12">
+                <h1 class="font-orbitron text-4xl md:text-5xl font-bold mb-4 wave-text">Quantum Topics</h1>
+                <p class="text-gray-400 text-lg">Comprehensive coverage of quantum mechanics from fundamentals to advanced concepts</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="topics-grid">
+                <!-- Topics will be populated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- SIMULATIONS SECTION -->
+        <section id="simulations" class="section">
+            <div class="mb-8">
+                <h1 class="font-orbitron text-4xl md:text-5xl font-bold mb-4 wave-text">Interactive Simulations</h1>
+                <p class="text-gray-400 text-lg">Experiment with quantum phenomena in real-time</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                <button onclick="loadSimulation('double-slit')" class="sim-btn glass p-4 rounded-xl border-2 border-transparent hover:border-cyan-500 transition text-left">
+                    <h3 class="font-orbitron text-lg font-bold text-cyan-300">Double-Slit Experiment</h3>
+                    <p class="text-sm text-gray-400 mt-1">Wave-particle duality visualization</p>
+                </button>
+                <button onclick="loadSimulation('particle-box')" class="sim-btn glass p-4 rounded-xl border-2 border-transparent hover:border-purple-500 transition text-left">
+                    <h3 class="font-orbitron text-lg font-bold text-purple-300">Particle in a Box</h3>
+                    <p class="text-sm text-gray-400 mt-1">Quantum confinement and energy levels</p>
+                </button>
+                <button onclick="loadSimulation('tunneling')" class="sim-btn glass p-4 rounded-xl border-2 border-transparent hover:border-pink-500 transition text-left">
+                    <h3 class="font-orbitron text-lg font-bold text-pink-300">Quantum Tunneling</h3>
+                    <p class="text-sm text-gray-400 mt-1">Barrier penetration probability</p>
+                </button>
+                <button onclick="loadSimulation('harmonic')" class="sim-btn glass p-4 rounded-xl border-2 border-transparent hover:border-green-500 transition text-left">
+                    <h3 class="font-orbitron text-lg font-bold text-green-300">Quantum Harmonic Oscillator</h3>
+                    <p class="text-sm text-gray-400 mt-1">Wave functions and energy eigenstates</p>
+                </button>
+                <button onclick="loadSimulation('spin')" class="sim-btn glass p-4 rounded-xl border-2 border-transparent hover:border-yellow-500 transition text-left">
+                    <h3 class="font-orbitron text-lg font-bold text-yellow-300">Spin Measurement</h3>
+                    <p class="text-sm text-gray-400 mt-1">Stern-Gerlach experiment simulation</p>
+                </button>
+                <button onclick="loadSimulation('uncertainty')" class="sim-btn glass p-4 rounded-xl border-2 border-transparent hover:border-red-500 transition text-left">
+                    <h3 class="font-orbitron text-lg font-bold text-red-300">Uncertainty Principle</h3>
+                    <p class="text-sm text-gray-400 mt-1">Position-momentum trade-off</p>
+                </button>
+            </div>
+
+            <div class="glass rounded-2xl p-6 glow-border">
+                <div id="simulation-container" class="w-full">
+                    <canvas id="simCanvas" class="w-full bg-black/50 rounded-lg"></canvas>
+                    <div id="sim-controls" class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <!-- Dynamic controls inserted here -->
+                    </div>
+                    <div id="sim-info" class="mt-4 p-4 bg-black/30 rounded-lg font-mono text-sm text-cyan-300">
+                        Select a simulation to begin
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- NOTES SECTION -->
+        <section id="notes" class="section">
+            <div class="mb-8">
+                <h1 class="font-orbitron text-4xl md:text-5xl font-bold mb-4 wave-text">Detailed Notes</h1>
+                <p class="text-gray-400 text-lg">Comprehensive study materials with mathematical derivations</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                <!-- Sidebar -->
+                <div class="lg:col-span-1">
+                    <div class="glass rounded-xl p-4 sticky top-24">
+                        <h3 class="font-orbitron text-lg font-bold text-cyan-300 mb-4">Contents</h3>
+                        <ul class="space-y-2 text-sm">
+                            <li><button onclick="showNote('postulates')" class="text-left w-full text-gray-300 hover:text-cyan-400 py-1">1. Postulates of QM</button></li>
+                            <li><button onclick="showNote('schrodinger')" class="text-left w-full text-gray-300 hover:text-cyan-400 py-1">2. Schrödinger Equation</button></li>
+                            <li><button onclick="showNote('operators')" class="text-left w-full text-gray-300 hover:text-cyan-400 py-1">3. Operators & Observables</button></li>
+                            <li><button onclick="showNote('hydrogen')" class="text-left w-full text-gray-300 hover:text-cyan-400 py-1">4. Hydrogen Atom</button></li>
+                            <li><button onclick="showNote('perturbation')" class="text-left w-full text-gray-300 hover:text-cyan-400 py-1">5. Perturbation Theory</button></li>
+                            <li><button onclick="showNote('scattering')" class="text-left w-full text-gray-300 hover:text-cyan-400 py-1">6. Scattering Theory</button></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Content -->
+                <div class="lg:col-span-3">
+                    <div id="note-content" class="glass rounded-xl p-8 min-h-[600px]">
+                        <div class="terminal p-4 rounded-lg mb-6">
+                            <span class="text-cyan-400">root@quantum-nexus:~$</span> <span class="text-white">cat postulates.txt</span>
+                        </div>
+                        
+                        <h2 class="font-orbitron text-3xl font-bold text-white mb-6">The Postulates of Quantum Mechanics</h2>
+                        
+                        <div class="space-y-6 text-gray-300 leading-relaxed">
+                            <div class="formula">
+                                <strong class="text-cyan-400">Postulate I:</strong> The state of a quantum system is completely specified by a wave function Ψ(r,t), which contains all accessible physical information.
+                            </div>
+                            
+                            <p>The wave function must be single-valued, continuous, and square-integrable. The probability density is given by |Ψ|² = Ψ*Ψ.</p>
+                            
+                            <div class="formula">
+                                <strong class="text-purple-400">Postulate II:</strong> Every observable corresponds to a Hermitian operator Â. The eigenvalues are real and represent possible measurement outcomes.
+                                <br/><br/>
+                                Âψₙ = aₙψₙ
+                            </div>
+                            
+                            <div class="formula">
+                                <strong class="text-pink-400">Postulate III:</strong> The expectation value of an observable is:
+                                <br/><br/>
+                                ⟨A⟩ = ∫ Ψ* Â Ψ d³r / ∫ Ψ*Ψ d³r
+                            </div>
+                            
+                            <div class="formula">
+                                <strong class="text-green-400">Postulate IV:</strong> Time evolution is governed by the Schrödinger equation:
+                                <br/><br/>
+                                iℏ ∂Ψ/∂t = ĤΨ
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Q&A SECTION -->
+        <section id="qa" class="section">
+            <div class="mb-8">
+                <h1 class="font-orbitron text-4xl md:text-5xl font-bold mb-4 wave-text">Quantum Q&A</h1>
+                <p class="text-gray-400 text-lg">Frequently asked questions about quantum mechanics</p>
+            </div>
+
+            <div class="max-w-4xl mx-auto space-y-4" id="qa-container">
+                <!-- Q&A items populated by JS -->
+            </div>
+
+            <div class="mt-12 glass rounded-xl p-8 max-w-4xl mx-auto">
+                <h3 class="font-orbitron text-2xl font-bold text-cyan-300 mb-4">Ask a Question</h3>
+                <form onsubmit="submitQuestion(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-2">Your Question</label>
+                        <textarea class="w-full bg-black/30 border border-cyan-500/30 rounded-lg p-4 text-white focus:border-cyan-500 focus:outline-none" rows="3" placeholder="What would you like to know about quantum physics?"></textarea>
+                    </div>
+                    <button type="submit" class="quantum-btn px-6 py-3 rounded-lg text-white font-bold">Submit Question</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- GALLERY SECTION -->
+        <section id="gallery" class="section">
+            <div class="mb-8">
+                <h1 class="font-orbitron text-4xl md:text-5xl font-bold mb-4 wave-text">Visual Gallery</h1>
+                <p class="text-gray-400 text-lg">Artistic representations of quantum phenomena</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="gallery-item glass rounded-xl overflow-hidden">
+                    <img src="https://share.google/fW6Sqg04aDYI75Gr7" alt="Double Slit" class="gallery-img w-full h-64 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-orbitron text-lg font-bold text-cyan-300">Double Slit Interference</h3>
+                        <p class="text-sm text-gray-400">Wave-particle duality visualization</p>
+                    </div>
+                </div>
+                
+                <div class="gallery-item glass rounded-xl overflow-hidden">
+                    <img src="https://kimi-web-img.moonshot.cn/img/thumbs.dreamstime.com/2f0dc90d8f9d0d2973a8198dd0fd62547380528e.jpg" alt="Entanglement" class="gallery-img w-full h-64 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-orbitron text-lg font-bold text-purple-300">Quantum Entanglement</h3>
+                        <p class="text-sm text-gray-400">Connected quantum states</p>
+                    </div>
+                </div>
+                
+                <div class="gallery-item glass rounded-xl overflow-hidden">
+                    <img src="https://kimi-web-img.moonshot.cn/img/thumbs.dreamstime.com/1cf2e3de346e750fdb941786c40bc6182f31d9d8.jpg" alt="Atomic Orbitals" class="gallery-img w-full h-64 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-orbitron text-lg font-bold text-green-300">Electron Cloud</h3>
+                        <p class="text-sm text-gray-400">Probability distribution</p>
+                    </div>
+                </div>
+                
+                <div class="gallery-item glass rounded-xl overflow-hidden">
+                    <img src="https://kimi-web-img.moonshot.cn/img/static.scientificamerican.com/fa4f3c04a18c69598a5ef03f6f7eed2cd0ba2324.jpg" alt="Tunneling" class="gallery-img w-full h-64 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-orbitron text-lg font-bold text-pink-300">Quantum Tunneling</h3>
+                        <p class="text-sm text-gray-400">Barrier penetration</p>
+                    </div>
+                </div>
+                
+                <div class="gallery-item glass rounded-xl overflow-hidden">
+                    <img src="https://kimi-web-img.moonshot.cn/img/images.fineartamerica.com/82a7b096a7919c11fa240dc0701a3ad551780ff3.jpg" alt="Entanglement Art" class="gallery-img w-full h-64 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-orbitron text-lg font-bold text-yellow-300">Entanglement Network</h3>
+                        <p class="text-sm text-gray-400">Complex quantum correlations</p>
+                    </div>
+                </div>
+                
+                <div class="gallery-item glass rounded-xl overflow-hidden">
+                    <img src="https://kimi-web-img.moonshot.cn/img/scitechdaily.com/bb9b6eab6634d2495c009112a53ae4629dc00516.jpg" alt="Wave Function" class="gallery-img w-full h-64 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-orbitron text-lg font-bold text-cyan-300">Wave Function</h3>
+                        <p class="text-sm text-gray-400">Quantum state visualization</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ADMIN SECTION -->
+        <section id="admin" class="section">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-12">
+                    <h1 class="font-orbitron text-4xl font-bold text-red-500 mb-2">🔒 SECURE ADMIN PORTAL</h1>
+                    <p class="text-red-400/60 font-mono">RESTRICTED ACCESS - AUTHORIZED PERSONNEL ONLY</p>
+                </div>
+
+                <!-- Login Form -->
+                <div id="admin-login" class="glass-strong rounded-2xl p-8 max-w-md mx-auto border-2 border-red-500/30 security-overlay">
+                    <div class="flex items-center justify-center mb-6">
+                        <div class="w-16 h-16 rounded-full bg-red-500/20 flex items-center justify-center border-2 border-red-500">
+                            <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                        </div>
+                    </div>
+                    
+                    <form onsubmit="authenticateAdmin(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-red-400 text-sm font-bold mb-2 font-mono">USERNAME</label>
+                            <input type="text" id="admin-user" class="w-full bg-black/50 border border-red-500/30 rounded p-3 text-white font-mono focus:border-red-500 focus:outline-none" placeholder="Enter username">
+                        </div>
+                        <div>
+                            <label class="block text-red-400 text-sm font-bold mb-2 font-mono">PASSWORD</label>
+                            <input type="password" id="admin-pass" class="w-full bg-black/50 border border-red-500/30 rounded p-3 text-white font-mono focus:border-red-500 focus:outline-none" placeholder="••••••••">
+                        </div>
+                        <div>
+                            <label class="block text-red-400 text-sm font-bold mb-2 font-mono">2FA CODE</label>
+                            <input type="text" id="admin-2fa" class="w-full bg-black/50 border border-red-500/30 rounded p-3 text-white font-mono focus:border-red-500 focus:outline-none" placeholder="000000" maxlength="6">
+                        </div>
+                        <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded transition border border-red-400">
+                            AUTHENTICATE
+                        </button>
+                    </form>
+                    
+                    <div class="mt-4 text-center">
+                        <p class="text-xs text-red-400/50 font-mono">Failed attempts: <span id="attempts">0</span>/3</p>
+                    </div>
+                </div>
+
+                <!-- Admin Dashboard (Hidden by default) -->
+                <div id="admin-dashboard" class="hidden space-y-6">
+                    <div class="glass-strong rounded-xl p-6 border border-green-500/30">
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="font-orbitron text-2xl text-green-400">System Status: ONLINE</h2>
+                            <button onclick="logoutAdmin()" class="text-red-400 hover:text-red-300 text-sm font-bold">LOGOUT</button>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                            <div class="bg-black/30 rounded p-4 border border-cyan-500/30">
+                                <div class="text-2xl font-bold text-cyan-400" id="visitor-count">1,247</div>
+                                <div class="text-xs text-gray-400">Active Sessions</div>
+                            </div>
+                            <div class="bg-black/30 rounded p-4 border border-purple-500/30">
+                                <div class="text-2xl font-bold text-purple-400">98.2%</div>
+                                <div class="text-xs text-gray-400">Server Uptime</div>
+                            </div>
+                            <div class="bg-black/30 rounded p-4 border border-green-500/30">
+                                <div class="text-2xl font-bold text-green-400">SECURE</div>
+                                <div class="text-xs text-gray-400">Firewall Status</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="glass rounded-xl p-6">
+                            <h3 class="font-orbitron text-xl text-cyan-300 mb-4">Content Management</h3>
+                            <div class="space-y-2">
+                                <button class="w-full text-left p-3 bg-black/30 rounded hover:bg-cyan-500/20 transition text-sm">Edit Topic: Wave-Particle Duality</button>
+                                <button class="w-full text-left p-3 bg-black/30 rounded hover:bg-cyan-500/20 transition text-sm">Update Simulation Parameters</button>
+                                <button class="w-full text-left p-3 bg-black/30 rounded hover:bg-cyan-500/20 transition text-sm">Manage Q&A Database</button>
+                                <button class="w-full text-left p-3 bg-black/30 rounded hover:bg-cyan-500/20 transition text-sm">Upload Gallery Images</button>
+                            </div>
+                        </div>
+                        
+                        <div class="glass rounded-xl p-6">
+                            <h3 class="font-orbitron text-xl text-purple-300 mb-4">Security Logs</h3>
+                            <div class="font-mono text-xs space-y-2 text-gray-400 h-48 overflow-y-auto" id="security-logs">
+                                <div class="text-green-400">[2026-03-31 21:45:23] Admin login successful</div>
+                                <div class="text-yellow-400">[2026-03-31 21:30:15] Failed login attempt from IP 192.168.1.45</div>
+                                <div class="text-cyan-400">[2026-03-31 21:15:00] Database backup completed</div>
+                                <div class="text-gray-500">[2026-03-31 20:45:12] System maintenance scheduled</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-cyan-500/20 bg-black/50 mt-20">
+        <div class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center space-x-2 mb-4 md:mb-0">
+                    <span class="font-orbitron text-xl font-bold text-cyan-400">QN</span>
+                    <span class="text-gray-400">© 2026 Quantum Nexus. All realities reserved.</span>
+                </div>
+                <div class="flex space-x-6 text-sm text-gray-400">
+                    <a href="#" class="hover:text-cyan-400 transition">Privacy</a>
+                    <a href="#" class="hover:text-cyan-400 transition">Terms</a>
+                    <a href="#" class="hover:text-cyan-400 transition">Contact</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Particle Background
+        function initParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        // Navigation
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+            window.scrollTo(0, 0);
+            
+            // Initialize simulations if entering that section
+            if (sectionId === 'simulations') {
+                setTimeout(() => loadSimulation('double-slit'), 100);
+            }
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Topics Data
+        const topics = [
+            {
+                id: 'wave-particle',
+                title: 'Wave-Particle Duality',
+                color: 'cyan',
+                content: 'Matter and light exhibit both wave-like and particle-like properties. The de Broglie wavelength λ = h/p connects momentum to wavelength.',
+                image: 'https://kimi-web-img.moonshot.cn/img/thumbs.dreamstime.com/c16c9a3e7fa90031f911d23ad4feb2dd33e40191.jpg'
+            },
+            {
+                id: 'uncertainty',
+                title: 'Heisenberg Uncertainty',
+                color: 'purple',
+                content: 'ΔxΔp ≥ ℏ/2. Position and momentum cannot be simultaneously known with arbitrary precision. Fundamental limit of nature.',
+                image: 'https://kimi-web-img.moonshot.cn/img/thumbs.dreamstime.com/31b7acf44706f5b0ecf0359452b721749e13a583.jpg'
+            },
+            {
+                id: 'superposition',
+                title: 'Quantum Superposition',
+                color: 'pink',
+                content: 'Particles exist in multiple states simultaneously until measured. Schrödinger\'s cat is both alive and dead until observed.',
+                image: 'https://kimi-web-img.moonshot.cn/img/thumbs.dreamstime.com/c1953cebe136d5c798729002685a062c8086fc4e.jpg'
+            },
+            {
+                id: 'entanglement',
+                title: 'Quantum Entanglement',
+                color: 'green',
+                content: 'Two particles become correlated such that measuring one instantly determines the state of the other, regardless of distance.',
+                image: 'https://kimi-web-img.moonshot.cn/img/images.fineartamerica.com/82a7b096a7919c11fa240dc0701a3ad551780ff3.jpg'
+            },
+            {
+                id: 'tunneling',
+                title: 'Quantum Tunneling',
+                color: 'yellow',
+                content: 'Particles can pass through energy barriers higher than their total energy. Essential for nuclear fusion and scanning tunneling microscopy.',
+                image: 'https://kimi-web-img.moonshot.cn/img/analyticalscience.wiley.com/f3cf9e4f65b9a5d0390b1d9b2b952568d344b8df.jpeg'
+            },
+            {
+                id: 'decoherence',
+                title: 'Quantum Decoherence',
+                color: 'red',
+                content: 'Loss of quantum coherence due to interaction with environment. Explains the quantum-to-classical transition.',
+                image: 'https://kimi-web-img.moonshot.cn/img/static.scientificamerican.com/fa4f3c04a18c69598a5ef03f6f7eed2cd0ba2324.jpg'
+            }
+        ];
+
+        // Populate Topics
+        function populateTopics() {
+            const grid = document.getElementById('topics-grid');
+            topics.forEach(topic => {
+                const card = document.createElement('div');
+                card.className = 'topic-card glass rounded-xl overflow-hidden cursor-pointer';
+                card.onclick = () => showTopicDetail(topic.id);
+                card.innerHTML = `
+                    <div class="h-48 overflow-hidden relative">
+                        <img src="${topic.image}" alt="${topic.title}" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
+                        <div class="absolute bottom-4 left-4">
+                            <h3 class="font-orbitron text-2xl font-bold text-${topic.color}-400">${topic.title}</h3>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-gray-300 mb-4">${topic.content}</p>
+                        <div class="flex items-center text-${topic.color}-400 text-sm font-bold">
+                            <span>Explore Topic</span>
+                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function showTopicDetail(topicId) {
+            alert(`Loading detailed content for ${topicId}...\n\nIn a full implementation, this would open a detailed view with:\n- Comprehensive explanations\n- Mathematical derivations\n- Interactive elements\n- Related simulations`);
+        }
+
+        // Q&A Data
+        const qaData = [
+            {
+                question: "What is the wave function collapse?",
+                answer: "Wave function collapse is the reduction of the wave packet into a single eigenstate upon measurement. Before measurement, a quantum system exists in a superposition of all possible states. The act of measurement forces the system to 'choose' a definite state, with probability determined by the amplitude squared of the wave function."
+            },
+            {
+                question: "Why can't we simultaneously know position and momentum?",
+                answer: "The Heisenberg Uncertainty Principle arises from the wave nature of matter. A particle with definite position has a wave function localized in space (like a spike), which requires superposition of many momentum states (Fourier components). Conversely, a definite momentum requires a spread-out wave. This is a fundamental property of Fourier transforms, not a measurement limitation."
+            },
+            {
+                question: "What is quantum entanglement used for?",
+                answer: "Quantum entanglement enables quantum computing (qubit correlations), quantum cryptography (secure key distribution via BB84 protocol), quantum teleportation (transferring quantum states), and precision measurements in quantum metrology. Einstein called it 'spooky action at a distance'."
+            },
+            {
+                question: "How does quantum tunneling work?",
+                answer: "In quantum mechanics, particles are described by wave functions that extend into classically forbidden regions (where potential energy exceeds total energy). Though the wave function decays exponentially in these regions, if the barrier is thin enough, there's non-zero probability of finding the particle on the other side. This explains alpha decay and enables STM microscopes."
+            },
+            {
+                question: "What is the difference between bosons and fermions?",
+                answer: "Bosons (integer spin) obey Bose-Einstein statistics and can occupy the same quantum state (leading to Bose-Einstein condensation). Fermions (half-integer spin) obey Pauli Exclusion Principle - no two identical fermions can occupy the same quantum state simultaneously. This explains electron shell structure in atoms."
+            }
+        ];
+
+        function populateQA() {
+            const container = document.getElementById('qa-container');
+            qaData.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'qa-item glass rounded-xl p-6 cursor-pointer';
+                div.onclick = () => div.classList.toggle('active');
+                div.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <h3 class="font-orbitron text-lg font-bold text-cyan-300 pr-4">${item.question}</h3>
+                        <svg class="w-6 h-6 text-cyan-500 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </div>
+                    <div class="qa-answer mt-4 text-gray-300 leading-relaxed border-t border-cyan-500/20 pt-4">
+                        ${item.answer}
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function submitQuestion(e) {
+            e.preventDefault();
+            alert('Question submitted! Our quantum physicists will review it shortly.');
+            e.target.reset();
+        }
+
+        // Simulations
+        let currentSim = null;
+        let animationId = null;
+
+        function loadSimulation(type) {
+            const canvas = document.getElementById('simCanvas');
+            const ctx = canvas.getContext('2d');
+            const controls = document.getElementById('sim-controls');
+            const info = document.getElementById('sim-info');
+            
+            // Set canvas size
+            canvas.width = canvas.offsetWidth;
+            canvas.height = 400;
+            
+            // Clear previous
+            if (animationId) cancelAnimationFrame(animationId);
+            
+            // Update active button
+            document.querySelectorAll('.sim-btn').forEach(btn => {
+                btn.classList.remove('border-cyan-500', 'border-purple-500', 'border-pink-500');
+            });
+            
+            switch(type) {
+                case 'double-slit':
+                    runDoubleSlit(ctx, canvas, controls, info);
+                    break;
+                case 'particle-box':
+                    runParticleBox(ctx, canvas, controls, info);
+                    break;
+                case 'tunneling':
+                    runTunneling(ctx, canvas, controls, info);
+                    break;
+                case 'harmonic':
+                    runHarmonic(ctx, canvas, controls, info);
+                    break;
+                case 'spin':
+                    runSpin(ctx, canvas, controls, info);
+                    break;
+                case 'uncertainty':
+                    runUncertainty(ctx, canvas, controls, info);
+                    break;
+            }
+        }
+
+        function runDoubleSlit(ctx, canvas, controls, info) {
+            info.innerHTML = '<strong>Double-Slit Experiment:</strong> Observe wave interference patterns. Particles behave as waves when unobserved, creating interference bands.';
+            
+            controls.innerHTML = `
+                <div>
+                    <label class="block text-sm text-cyan-400 mb-1">Particle Speed</label>
+                    <input type="range" id="ds-speed" min="1" max="10" value="5" class="w-full accent-cyan-500">
+                </div>
+                <div>
+                    <label class="block text-sm text-cyan-400 mb-1">Slit Separation</label>
+                    <input type="range" id="ds-sep" min="20" max="100" value="50" class="w-full accent-cyan-500">
+                </div>
+                <div>
+                    <label class="block text-sm text-cyan-400 mb-1">Observation Mode</label>
+                    <button id="ds-observe" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white py-2 rounded text-sm">Toggle Observer</button>
+                </div>
+            `;
+            
+            let particles = [];
+            let observing = false;
+            let speed = 5;
+            let separation = 50;
+            
+            document.getElementById('ds-speed').oninput = (e) => speed = parseInt(e.target.value);
+            document.getElementById('ds-sep').oninput = (e) => separation = parseInt(e.target.value);
+            document.getElementById('ds-observe').onclick = () => {
+                observing = !observing;
+                info.innerHTML = observing ? 
+                    '<strong>Observation Active:</strong> Wave function collapsed! Interference pattern destroyed - particle behavior detected.' :
+                    '<strong>Double-Slit Experiment:</strong> Observe wave interference patterns. Particles behave as waves when unobserved.';
+            };
+            
+            function animate() {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw slits
+                ctx.fillStyle = '#333';
+                ctx.fillRect(canvas.width/2 - 5, 0, 10, canvas.height/2 - separation/2);
+                ctx.fillRect(canvas.width/2 - 5, canvas.height/2 + separation/2, 10, canvas.height/2 - separation/2);
+                
+                // Add new particle
+                if (Math.random() < 0.3) {
+                    particles.push({
+                        x: 0,
+                        y: canvas.height/2 + (Math.random() - 0.5) * 20,
+                        vx: speed,
+                        vy: observing ? 0 : (Math.random() - 0.5) * 2,
+                        detected: false
+                    });
+                }
+                
+                // Update and draw particles
+                ctx.fillStyle = observing ? '#ff006e' : '#00d4ff';
+                particles = particles.filter(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    
+                    if (!observing && p.x > canvas.width/2 && !p.detected) {
+                        p.vy += (Math.random() - 0.5) * 4; // Interference
+                        p.detected = true;
+                    }
+                    
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    return p.x < canvas.width;
+                });
+                
+                animationId = requestAnimationFrame(animate);
+            }
+            animate();
+        }
+
+        function runParticleBox(ctx, canvas, controls, info) {
+            info.innerHTML = '<strong>Particle in a Box:</strong> Quantized energy levels in infinite potential well. Eₙ = n²π²ℏ²/(2mL²)';
+            
+            controls.innerHTML = `
+                <div>
+                    <label class="block text-sm text-purple-400 mb-1">Quantum Number (n)</label>
+                    <input type="range" id="box-n" min="1" max="5" value="1" class="w-full accent-purple-500">
+                </div>
+                <div>
+                    <label class="block text-sm text-purple-400 mb-1">Superposition</label>
+                    <input type="range" id="box-mix" min="0" max="100" value="0" class="w-full accent-purple-500">
+                </div>
+                <div>
+                    <label class="block text-sm text-purple-400 mb-1">Time Evolution</label>
+                    <button id="box-pause" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded text-sm">Pause/Play</button>
+                </div>
+            `;
+            
+            let n = 1;
+            let mix = 0;
+            let time = 0;
+            let paused = false;
+            
+            document.getElementById('box-n').oninput = (e) => n = parseInt(e.target.value);
+            document.getElementById('box-mix').oninput = (e) => mix = parseInt(e.target.value) / 100;
+            document.getElementById('box-pause').onclick = () => paused = !paused;
+            
+            function animate() {
+                ctx.fillStyle = '#0a0a0f';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw box
+                ctx.strokeStyle = '#9d4edd';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(50, 50, canvas.width - 100, canvas.height - 100);
+                
+                // Draw wave function
+                ctx.beginPath();
+                ctx.strokeStyle = '#00d4ff';
+                ctx.lineWidth = 3;
+                
+                for (let x = 0; x <= canvas.width - 100; x += 2) {
+                    let xNorm = x / (canvas.width - 100) * Math.PI;
+                    let psi1 = Math.sin(n * xNorm) * Math.cos(time);
+                    let psi2 = Math.sin((n+1) * xNorm) * Math.cos(time * (n+1)**2 / n**2);
+                    let psi = (1-mix) * psi1 + mix * psi2;
+                    let y = canvas.height/2 - psi * 100;
+                    
+                    if (x === 0) ctx.moveTo(50 + x, y);
+                    else ctx.lineTo(50 + x, y);
+                }
+                ctx.stroke();
+                
+                // Draw probability
+                ctx.beginPath();
+                ctx.fillStyle = 'rgba(0, 212, 255, 0.2)';
+                for (let x = 0; x <= canvas.width - 100; x += 2) {
+                    let xNorm = x / (canvas.width - 100) * Math.PI;
+                    let psi1 = Math.sin(n * xNorm);
+                    let psi2 = Math.sin((n+1) * xNorm);
+                    let psi = (1-mix) * psi1 + mix * psi2;
+                    let prob = psi * psi * 100;
+                    
+                    ctx.fillRect(50 + x, canvas.height/2 - prob/2, 2, prob);
+                }
+                
+                if (!paused) time += 0.05;
+                animationId = requestAnimationFrame(animate);
+            }
+            animate();
+        }
+
+        function runTunneling(ctx, canvas, controls, info) {
+            info.innerHTML = '<strong>Quantum Tunneling:</strong> Particle probability extends through barriers. Transmission probability ~ exp(-2κL)';
+            
+            controls.innerHTML = `
+                <div>
+                    <label class="block text-sm text-pink-400 mb-1">Barrier Height</label>
+                    <input type="range" id="tun-height" min="50" max="200" value="100" class="w-full accent-pink-500">
+                </div>
+                <div>
+                    <label class="block text-sm text-pink-400 mb-1">Barrier Width</label>
+                    <input type="range" id="tun-width" min="20" max="100" value="40" class="w-full accent-pink-500">
+                </div>
+                <div>
+                    <label class="block text-sm text-pink-400 mb-1">Particle Energy</label>
+                    <input type="range" id="tun-energy" min="20" max="150" value="80" class="w-full accent-pink-500">
+                </div>
+            `;
+            
+            let barrierHeight = 100;
+            let barrierWidth = 40;
+            let particleEnergy = 80;
+            let particles = [];
+            
+            document.getElementById('tun-height').oninput = (e) => barrierHeight = parseInt(e.target.value);
+            document.getElementById('tun-width').oninput = (e) => barrierWidth = parseInt(e.target.value);
+            document.getElementById('tun-energy').oninput = (e) => particleEnergy = parseInt(e.target.value);
+            
+            function animate() {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                const barrierX = canvas.width / 2 - barrierWidth / 2;
+                const barrierY = canvas.height / 2 - barrierHeight / 2;
+                
+                // Draw barrier
+                ctx.fillStyle = 'rgba(255, 0, 110, 0.3)';
+                ctx.fillRect(barrierX, barrierY, barrierWidth, barrierHeight);
+                ctx.strokeStyle = '#ff006e';
+                ctx.strokeRect(barrierX, barrierY, barrierWidth, barrierHeight);
+                
+                // Add particles
+                if (Math.random() < 0.1) {
+                    particles.push({
+                        x: 20,
+                        y: canvas.height/2 + (Math.random() - 0.5) * 50,
+                        vx: 3,
+                        tunneled: false
+                    });
+                }
+                
+                // Update particles
+                ctx.fillStyle = '#00f5ff';
+                particles = particles.filter(p => {
+                    // Check barrier collision
+                    if (p.x > barrierX && p.x < barrierX + barrierWidth && !p.tunneled) {
+                        if (Math.random() < Math.exp(-barrierWidth/30)) { // Tunnel probability
+                            p.tunneled = true;
+                            p.vx = 3;
+                        } else {
+                            p.vx = -2; // Reflection
+                        }
+                    }
+                    
+                    p.x += p.vx;
+                    
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    return p.x > 0 && p.x < canvas.width;
+                });
+                
+                // Draw energy line
+                ctx.strokeStyle = '#00ff00';
+                ctx.setLineDash([5, 5]);
+                ctx.beginPath();
+                ctx.moveTo(0, canvas.height/2 + particleEnergy/2);
+                ctx.lineTo(canvas.width, canvas.height/2 + particleEnergy/2);
+                ctx.stroke();
+                ctx.setLineDash([]);
+                
+                animationId = requestAnimationFrame(animate);
+            }
+            animate();
+        }
+
+        function runHarmonic(ctx, canvas, controls, info) {
+            info.innerHTML = '<strong>Quantum Harmonic Oscillator:</strong> Equally spaced energy levels. Wave functions involve Hermite polynomials.';
+            controls.innerHTML = '<div class="col-span-3 text-center text-gray-400">Interactive controls for harmonic oscillator simulation</div>';
+            
+            let time = 0;
+            function animate() {
+                ctx.fillStyle = '#0a0a0f';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw potential
+                ctx.strokeStyle = '#444';
+                ctx.beginPath();
+                for (let x = -200; x < 200; x += 5) {
+                    let y = 0.005 * x * x;
+                    if (x === -200) ctx.moveTo(canvas.width/2 + x, canvas.height - 100 - y);
+                    else ctx.lineTo(canvas.width/2 + x, canvas.height - 100 - y);
+                }
+                ctx.stroke();
+                
+                // Draw wave functions for n=0,1,2
+                [0, 1, 2].forEach(n => {
+                    ctx.strokeStyle = ['#00d4ff', '#9d4edd', '#ff006e'][n];
+                    ctx.beginPath();
+                    for (let x = -200; x < 200; x += 2) {
+                        let xi = x / 50;
+                        let psi = Math.exp(-xi*xi/2) * hermite(n, xi) * Math.cos(time * (n + 0.5));
+                        let y = canvas.height/2 - psi * 30 - n * 80;
+                        if (x === -200) ctx.moveTo(canvas.width/2 + x, y);
+                        else ctx.lineTo(canvas.width/2 + x, y);
+                    }
+                    ctx.stroke();
+                });
+                
+                time += 0.03;
+                animationId = requestAnimationFrame(animate);
+            }
+            animate();
+        }
+
+        function hermite(n, x) {
+            if (n === 0) return 1;
+            if (n === 1) return 2 * x;
+            if (n === 2) return 4 * x * x - 2;
+            return 0;
+        }
+
+        function runSpin(ctx, canvas, controls, info) {
+            info.innerHTML = '<strong>Spin Measurement:</strong> Stern-Gerlach experiment. Spin-1/2 particles deflect according to quantization.';
+            controls.innerHTML = '<div class="col-span-3 text-center text-gray-400">Spin orientation controls would appear here</div>';
+            
+            let angle = 0;
+            function animate() {
+                ctx.fillStyle = '#0a0a0f';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw magnetic field
+                ctx.strokeStyle = '#444';
+                for (let y = 50; y < canvas.height - 50; y += 30) {
+                    ctx.beginPath();
+                    ctx.moveTo(canvas.width/2 - 100, y);
+                    ctx.lineTo(canvas.width/2 + 100, y);
+                    ctx.stroke();
+                }
+                
+                // Draw spin vector
+                ctx.save();
+                ctx.translate(canvas.width/2, canvas.height/2);
+                ctx.rotate(angle);
+                
+                ctx.strokeStyle = '#00d4ff';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.lineTo(0, -60);
+                ctx.stroke();
+                
+                ctx.fillStyle = '#00d4ff';
+                ctx.beginPath();
+                ctx.arc(0, -60, 5, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.restore();
+                
+                angle += 0.02;
+                animationId = requestAnimationFrame(animate);
+            }
+            animate();
+        }
+
+        function runUncertainty(ctx, canvas, controls, info) {
+            info.innerHTML = '<strong>Uncertainty Principle:</strong> Trade-off between position and momentum precision. ΔxΔp ≥ ℏ/2';
+            controls.innerHTML = '<div class="col-span-3 text-center text-gray-400">Adjust wave packet width to see uncertainty relation</div>';
+            
+            let sigma = 30;
+            function animate() {
+                ctx.fillStyle = '#0a0a0f';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Position space
+                ctx.fillStyle = 'rgba(0, 212, 255, 0.3)';
+                for (let x = 0; x < canvas.width; x++) {
+                    let gauss = Math.exp(-Math.pow(x - canvas.width/2, 2) / (2 * sigma * sigma));
+                    ctx.fillRect(x, canvas.height/2 - gauss * 100, 1, gauss * 200);
+                }
+                
+                // Momentum space (Fourier transform width ~ 1/sigma)
+                let momSigma = 2000 / sigma;
+                ctx.fillStyle = 'rgba(157, 78, 221, 0.3)';
+                for (let k = 0; k < canvas.width; k++) {
+                    let gauss = Math.exp(-Math.pow(k - canvas.width/2, 2) / (2 * momSigma * momSigma));
+                    ctx.fillRect(k, canvas.height - 100 - gauss * 50, 1, gauss * 100);
+                }
+                
+                // Labels
+                ctx.fillStyle = '#00d4ff';
+                ctx.font = '14px Rajdhani';
+                ctx.fillText('Position Space (Δx)', 20, 30);
+                ctx.fillStyle = '#9d4edd';
+                ctx.fillText('Momentum Space (Δp)', 20, canvas.height - 20);
+                
+                animationId = requestAnimationFrame(animate);
+            }
+            animate();
+        }
+
+        // Notes Navigation
+        function showNote(noteId) {
+            const content = document.getElementById('note-content');
+            const notes = {
+                'postulates': {
+                    title: 'The Postulates of Quantum Mechanics',
+                    cmd: 'cat postulates.txt',
+                    body: `
+                        <div class="formula"><strong class="text-cyan-400">Postulate I:</strong> State specified by wave function Ψ(r,t)</div>
+                        <div class="formula"><strong class="text-purple-400">Postulate II:</strong> Observables ↔ Hermitian operators</div>
+                        <div class="formula"><strong class="text-pink-400">Postulate III:</strong> ⟨A⟩ = ∫ Ψ* Â Ψ d³r</div>
+                        <div class="formula"><strong class="text-green-400">Postulate IV:</strong> iℏ ∂Ψ/∂t = ĤΨ</div>
+                    `
+                },
+                'schrodinger': {
+                    title: 'The Schrödinger Equation',
+                    cmd: 'cat schrodinger_equation.txt',
+                    body: `
+                        <p class="mb-4">The time-dependent Schrödinger equation governs quantum dynamics:</p>
+                        <div class="formula">iℏ ∂Ψ/∂t = [-ℏ²/2m ∇² + V(r)] Ψ</div>
+                        <p class="mb-4">For time-independent potentials, we use separation of variables:</p>
+                        <div class="formula">Ψ(r,t) = ψ(r) e^(-iEt/ℏ)</div>
+                        <p>This leads to the time-independent Schrödinger equation:</p>
+                        <div class="formula">[-ℏ²/2m ∇² + V(r)] ψ = Eψ</div>
+                    `
+                },
+                'operators': {
+                    title: 'Operators & Observables',
+                    cmd: 'cat operators.txt',
+                    body: `
+                        <p class="mb-4">Quantum operators are linear Hermitian operators representing physical observables:</p>
+                        <div class="formula">Position: x̂ = x<br/>Momentum: p̂ = -iℏ ∂/∂x<br/>Hamiltonian: Ĥ = p̂²/2m + V(x̂)</div>
+                        <p class="mb-4">Commutation relations:</p>
+                        <div class="formula">[x̂, p̂] = iℏ</div>
+                    `
+                },
+                'hydrogen': {
+                    title: 'The Hydrogen Atom',
+                    cmd: 'cat hydrogen_atom.txt',
+                    body: `
+                        <p class="mb-4">The hydrogen atom is exactly solvable, yielding quantum numbers:</p>
+                        <div class="formula">n = 1, 2, 3... (principal)<br/>l = 0, 1, ..., n-1 (angular)<br/>m = -l, ..., l (magnetic)</div>
+                        <p>Energy levels depend only on n:</p>
+                        <div class="formula">Eₙ = -13.6 eV / n²</div>
+                    `
+                },
+                'perturbation': {
+                    title: 'Perturbation Theory',
+                    cmd: 'cat perturbation.txt',
+                    body: `
+                        <p class="mb-4">For Hamiltonians Ĥ = Ĥ₀ + λĤ', where Ĥ₀ is solvable:</p>
+                        <div class="formula">Eₙ = Eₙ⁰ + ⟨n|Ĥ'|n⟩ + Σ_{m≠n} |⟨m|Ĥ'|n⟩|²/(Eₙ⁰-Eₘ⁰) + ...</div>
+                        <p>Used for fine structure, Stark effect, and Zeeman effect calculations.</p>
+                    `
+                },
+                'scattering': {
+                    title: 'Scattering Theory',
+                    cmd: 'cat scattering.txt',
+                    body: `
+                        <p class="mb-4">Particle scattering described by cross-section σ:</p>
+                        <div class="formula">dσ/dΩ = |f(θ,φ)|²</div>
+                        <p>Born approximation for weak potentials:</p>
+                        <div class="formula">f(θ) = -m/(2πℏ²) ∫ V(r) e^{iq·r} d³r</div>
+                    `
+                }
+            };
+            
+            const note = notes[noteId];
+            content.innerHTML = `
+                <div class="terminal p-4 rounded-lg mb-6">
+                    <span class="text-cyan-400">root@quantum-nexus:~$</span> <span class="text-white">${note.cmd}</span>
+                </div>
+                <h2 class="font-orbitron text-3xl font-bold text-white mb-6">${note.title}</h2>
+                <div class="space-y-4 text-gray-300 leading-relaxed">${note.body}</div>
+            `;
+        }
+
+        // Admin Security
+        let failedAttempts = 0;
+        const correctCredentials = { user: 'admin', pass: 'quantum2026', code: '314159' };
+
+        function authenticateAdmin(e) {
+            e.preventDefault();
+            const user = document.getElementById('admin-user').value;
+            const pass = document.getElementById('admin-pass').value;
+            const code = document.getElementById('admin-2fa').value;
+            
+            if (user === correctCredentials.user && pass === correctCredentials.pass && code === correctCredentials.code) {
+                document.getElementById('admin-login').classList.add('hidden');
+                document.getElementById('admin-dashboard').classList.remove('hidden');
+                addSecurityLog('Admin login successful', 'green');
+                startVisitorCount();
+            } else {
+                failedAttempts++;
+                document.getElementById('attempts').textContent = failedAttempts;
+                addSecurityLog(`Failed login attempt - User: ${user}`, 'yellow');
+                
+                if (failedAttempts >= 3) {
+                    alert('SECURITY ALERT: Too many failed attempts. System locked for 5 minutes.');
+                    document.querySelector('button[type="submit"]').disabled = true;
+                }
+            }
+        }
+
+        function logoutAdmin() {
+            document.getElementById('admin-login').classList.remove('hidden');
+            document.getElementById('admin-dashboard').classList.add('hidden');
+            document.getElementById('admin-user').value = '';
+            document.getElementById('admin-pass').value = '';
+            document.getElementById('admin-2fa').value = '';
+        }
+
+        function addSecurityLog(message, color) {
+            const logs = document.getElementById('security-logs');
+            const time = new Date().toISOString().replace('T', ' ').slice(0, 19);
+            const entry = document.createElement('div');
+            entry.className = `text-${color}-400`;
+            entry.textContent = `[${time}] ${message}`;
+            logs.insertBefore(entry, logs.firstChild);
+        }
+
+        function startVisitorCount() {
+            setInterval(() => {
+                const count = document.getElementById('visitor-count');
+                count.textContent = Math.floor(1000 + Math.random() * 500);
+            }, 3000);
+        }
+
+        // Initialize
+        window.onload = () => {
+            initParticles();
+            populateTopics();
+            populateQA();
+        };
+
+        // Handle resize
+        window.onresize = () => {
+            const canvas = document.getElementById('simCanvas');
+            if (canvas && currentSim) {
+                canvas.width = canvas.offsetWidth;
+            }
+        };
+    </script>
+</body>
+</html>
